@@ -15,24 +15,24 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
         <h2 className="text-lg font-semibold">{job.title}</h2>
         <Badge
           className={`text-white ${job.status === "Active"
-              ? "bg-green-500"
-              : job.status === "Pending"
-                ? "bg-yellow-500"
-                : "bg-red-500"
+            ? "bg-green-500"
+            : job.status === "Pending"
+              ? "bg-yellow-500"
+              : "bg-red-500"
             }`}
         >
           {job.status}
         </Badge>
       </div>
-        <Briefcase size={16} /> {job.company}
+      <i className="ri-briefcase-3-line text-2xl text-gray-500"></i> {job.company}
       <p className="text-gray-500 flex items-center gap-1">
       </p>
       <p className="text-sm text-gray-700 mt-2">{"Description"}</p>
       <div className="flex justify-between items-center text-gray-500 text-xs mt-3">
         <span className="flex items-center gap-1">
-          <Calendar size={14} />
+          <i className="ri-calendar-line text-2xl"></i>
         </span>
-          <Clock size={14} />
+        <i className="ri-time-line text-2xl"></i>
         <span className="flex items-center gap-1">
         </span>
       </div>
