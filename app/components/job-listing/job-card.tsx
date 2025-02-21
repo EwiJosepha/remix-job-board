@@ -1,5 +1,5 @@
 
-import { Calendar, Briefcase, Clock } from "lucide-react";
+
 import { Badge } from "../ui/badge";
 import { Card } from "../ui/card";
 import { Job } from "~/db/models/job";
@@ -25,15 +25,15 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
         </Badge>
       </div>
       <p className="text-gray-500 flex items-center gap-1">
-        <Briefcase size={16} /> {job.company}
+        {/* <Briefcase size={16} /> {job.company} */}
       </p>
       <p className="text-sm text-gray-700 mt-2">{"Description"}</p>
       <div className="flex justify-between items-center text-gray-500 text-xs mt-3">
         <span className="flex items-center gap-1">
-          <Calendar size={14} />
+          {/* <Calendar size={14} /> */}
         </span>
         <span className="flex items-center gap-1">
-          <Clock size={14} />
+          {/* <Clock size={14} /> */}
         </span>
       </div>
     </Card>
