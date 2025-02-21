@@ -11,9 +11,11 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   return (
-    <div className=" flex gap-4">
+    <div className="flex gap-4">
       Job Board
-      <Link to={'/job'}>Go to listings</Link>
+      <Link to="/job">
+        <Button>Go to Listings</Button>
+      </Link>
     </div>
   );
 }
