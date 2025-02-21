@@ -7,11 +7,17 @@ import { JobModel } from "~/db/models/job";
 export const loader: LoaderFunction = async () => {
   await connectDB();
 
-  const jobs = await JobModel.find().lean();
-  // console.log({jobs});
-  
+  try {
+    const jobs = await JobModel.find().lean();
 
-  return json(jobs);
+    if (!jobs) {
+      throw new Response("No jobs found", { status: 404 });
+    }
+
+    return json(jobs); 
+  } catch (error) {
+    throw new Response("Error fetching jobs", { status: 500 });
+  }
 };
 
 export default function Jobs() {

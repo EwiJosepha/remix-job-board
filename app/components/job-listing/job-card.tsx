@@ -24,16 +24,16 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
           {job.status}
         </Badge>
       </div>
-      <p className="text-gray-500 flex items-center gap-1">
         <Briefcase size={16} /> {job.company}
+      <p className="text-gray-500 flex items-center gap-1">
       </p>
       <p className="text-sm text-gray-700 mt-2">{"Description"}</p>
       <div className="flex justify-between items-center text-gray-500 text-xs mt-3">
         <span className="flex items-center gap-1">
           <Calendar size={14} />
         </span>
-        <span className="flex items-center gap-1">
           <Clock size={14} />
+        <span className="flex items-center gap-1">
         </span>
       </div>
     </Card>
