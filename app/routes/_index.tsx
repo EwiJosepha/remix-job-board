@@ -1,4 +1,5 @@
 import type { MetaFunction } from "@remix-run/node";
+import { Link } from "@remix-run/react";
 import { Button } from "~/components/ui/button";
 
 export const meta: MetaFunction = () => {
@@ -10,9 +11,9 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   return (
-    <div className="">
+    <div className=" flex gap-4">
       Job Board
-      <Button>button</Button>
+      <Link to={'/job'}>Go to listings</Link>
     </div>
   );
 }
