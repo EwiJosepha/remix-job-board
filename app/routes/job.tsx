@@ -8,7 +8,7 @@ export const loader: LoaderFunction = async () => {
   await connectDB();
 
   const jobs = await JobModel.find().lean();
-  console.log({jobs});
+  // console.log({jobs});
   
 
   return json(jobs);
