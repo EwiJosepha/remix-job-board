@@ -1,5 +1,4 @@
 
-import { Calendar, Briefcase, Clock } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { Card } from "../ui/card";
 import { Job } from "~/db/models/job";
@@ -10,7 +9,7 @@ interface JobCardProps {
 
 const JobCard: React.FC<JobCardProps> = ({ job }) => {
   return (
-    <Card key={job._id} className="p-4 shadow-md rounded-lg border">
+    <Card key={job._id} className="p-4 shadow-md rounded-lg border cursor-pointer">
       <div className="flex justify-between items-center">
         <h2 className="text-lg font-semibold">{job.title}</h2>
         <Badge
