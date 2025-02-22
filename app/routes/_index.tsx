@@ -1,8 +1,9 @@
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json, useLoaderData } from "@remix-run/react";
+import Footer from "~/components/home/footer";
 import HeroSection from "~/components/home/hero";
 import Navbar from "~/components/home/nav";
-import JobCard from "~/components/job-listing/job-card";
+import JobContainer from "~/components/job-listing/job-container";
 import { connectDB } from "~/db/connect";
 import { JobModel } from "~/db/models/job";
 
@@ -38,14 +39,8 @@ export default function Index() {
     <div>
       <Navbar />
       <HeroSection />
-      <div className="container mx-auto p-6">
-      <h1 className="text-xl font-bold">Job Listings</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-        {jobs.map((job) => (
-        <JobCard  job={job} key={job._id}/>
-        ))}
-      </div>
-    </div>
+     <JobContainer jobs={jobs} />
+     <Footer />
     </div>
   );
 }
