@@ -14,7 +14,7 @@ export async function action({ request }: { request: Request }) {
   }
 
   console.log("New Job Posted:", result.data);
-  return redirect("/jobs");
+  return redirect("/all-jobs");
 }
 
 export async function loader() {
