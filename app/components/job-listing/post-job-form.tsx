@@ -16,8 +16,8 @@ export default function JobForm() {
   });
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <RemixForm method="post" action="/new-job" className=" bg-white shadow-md rounded-lg p-6 space-y-4">
+    <div className=" container flex justify-center items-center min-h-screen bg-gray-100">
+      <RemixForm method="post" action="/new-job" className="max-w-lg w-full bg-white shadow-md rounded-lg p-6 space-y-4">
         <h2 className="text-xl font-semibold text-gray-800 text-center">Post a New Job</h2>
 
         <Form {...form}>
