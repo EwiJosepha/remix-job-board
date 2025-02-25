@@ -26,13 +26,15 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
       <i className="ri-briefcase-3-line text-2xl text-gray-500"></i> {job.company}
       <p className="text-gray-500 flex items-center gap-1">
       </p>
-      <p className="text-sm text-gray-700 mt-2">{"Description"}</p>
+      <p className="text-sm text-gray-700 mt-2">{job.description}</p>
       <div className="flex justify-between items-center text-gray-500 text-xs mt-3">
         <span className="flex items-center gap-1">
           <i className="ri-calendar-line text-2xl"></i>
+          <p>{job.createdAt ? new Date(job.createdAt).getDate() : "N/A"}</p>
         </span>
-        <i className="ri-time-line text-2xl"></i>
+        <i className="ri-map-pin-line text-2xl"></i>
         <span className="flex items-center gap-1">
+          {job.location}
         </span>
       </div>
     </Card>
