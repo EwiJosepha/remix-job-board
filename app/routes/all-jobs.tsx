@@ -2,7 +2,7 @@ import { json, LoaderFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import JobContainer from '~/components/job-listing/job-container';
 import { connectDB } from '~/db/connect';
-import { JobModel } from '~/db/models/job';
+import { Job, JobModel } from '~/db/models/job';
 
 
 export const loader: LoaderFunction = async () => {
@@ -21,7 +21,7 @@ export const loader: LoaderFunction = async () => {
 };
 
 function AllJobs() {
-  const jobs = useLoaderData<{ _id: string; title: string; company: string }[]>() || [];
+  const jobs = useLoaderData<Job[]>()  || [];
   return (
     <>
       <h1>ALL JOB LSTINGS</h1>
