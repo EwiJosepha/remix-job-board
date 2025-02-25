@@ -23,6 +23,7 @@ export default function JobDetails() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
+      <p className="font-bold text-2xl">Details page for {job.title}</p>
       <Card className="shadow-lg p-6">
         <CardHeader>
           <CardTitle className="text-2xl font-bold">{job.title}</CardTitle>
