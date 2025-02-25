@@ -5,7 +5,7 @@ import HeroSection from "~/components/home/hero";
 import Navbar from "~/components/home/nav";
 import JobContainer from "~/components/job-listing/job-container";
 import { connectDB } from "~/db/connect";
-import { JobModel } from "~/db/models/job";
+import { Job, JobModel } from "~/db/models/job";
 
 export const meta: MetaFunction = () => {
   return [
@@ -33,13 +33,14 @@ export const loader: LoaderFunction = async () => {
 
 
 export default function Index() {
-    const jobs = useLoaderData<{ _id: string; title: string; company: string }[]>() || [];
+    const jobs = useLoaderData<Job[]>() || [];
+    const showTen = jobs.slice(0, 10)
   
   return (
     <div>
       <Navbar />
       <HeroSection />
-     <JobContainer jobs={jobs} />
+     <JobContainer jobs={showTen} />
      <Footer />
     </div>
   );

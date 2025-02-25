@@ -1,12 +1,13 @@
-import mongoose, { Schema } from "mongoose";
+import { Schema, model, Document } from 'mongoose';
 
-export type JobStatus = "Pending" | "Active" | "Inactive";
-
-export interface Job {
-  _id: string
+export interface Job extends Document {
   title: string;
   company: string;
-  status?: JobStatus;
+  category?: "Engineering" | "Marketing" | "Design" | "Finance" | "Sales";
+  location?: "New York, USA" | "London, UK" | "Berlin, Germany" | "Remote" | "San Francisco, USA";
+  description?: string;
+  salary?: string;
+  status?: "Pending" | "Active" | "Inactive";
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -15,6 +16,24 @@ const JobSchema = new Schema<Job>(
   {
     title: { type: String, required: true },
     company: { type: String, required: true },
+    category: {
+      type: String,
+      enum: ["Engineering", "Marketing", "Design", "Finance", "Sales"],
+      required: true,
+    },
+    location: {
+      type: String,
+      enum: [
+        "New York, USA",
+        "London, UK",
+        "Berlin, Germany",
+        "Remote",
+        "San Francisco, USA",
+      ],
+      required: true,
+    },
+    description: { type: String, required: true },
+    salary: { type: String, required: true },
     status: {
       type: String,
       enum: ["Pending", "Active", "Inactive"],
@@ -24,4 +43,4 @@ const JobSchema = new Schema<Job>(
   { timestamps: true }
 );
 
-export const JobModel = mongoose.models.Job || mongoose.model<Job>("Job", JobSchema);
+export const JobModel = model<Job>("Job", JobSchema);
