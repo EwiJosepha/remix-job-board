@@ -5,11 +5,12 @@ import { Job } from "~/db/models/job";
 
 interface JobCardProps {
   job: Job;
+  i: number
 }
 
-const JobCard: React.FC<JobCardProps> = ({ job }) => {
+const JobCard: React.FC<JobCardProps> = ({ job, i}) => {
   return (
-    <Card key={job._id} className="p-4 shadow-md rounded-lg border cursor-pointer">
+    <Card key={i} className="p-4 shadow-md rounded-lg border cursor-pointer">
       <div className="flex justify-between items-center">
         <h2 className="text-lg font-semibold">{job.title}</h2>
         <Badge
@@ -32,7 +33,7 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
           <i className="ri-calendar-line text-2xl"></i>
           <p>{job.createdAt ? new Date(job.createdAt).getDate() : "N/A"}</p>
         </span>
-        <i className="ri-map-pin-line text-2xl"></i>
+        <i className="ri-map-pin-line"></i>
         <span className="flex items-center gap-1">
           {job.location}
         </span>

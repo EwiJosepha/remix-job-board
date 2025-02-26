@@ -10,7 +10,7 @@ function JobContainer({ jobs }: { jobs: Job[] }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
         {jobs.map((job, i) => (
           <Link to={`/job/${job._id}`} key={i}>
-            <JobCard job={job} />
+            <JobCard job={job} i={i} />
           </Link>
         ))}
       </div>

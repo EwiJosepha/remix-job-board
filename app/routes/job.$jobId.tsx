@@ -1,4 +1,4 @@
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useNavigate } from "@remix-run/react";
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { connectDB } from "~/db/connect";
 import { JobModel } from "~/db/models/job";
@@ -9,18 +9,23 @@ import { Button } from "~/components/ui/button";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   await connectDB();
-  const job = await JobModel.findById(params.jobId).lean(); 
+  const job = await JobModel.findById(params.jobId).lean();
 
   if (!job) throw new Response("Job Not Found", { status: 404 });
 
   const similarJobs = await JobModel.find({ category: job.category }).limit(4).lean();
 
-  return { job, similarJobs };
+  const formattedSimilarJobs = similarJobs.map((job) => ({
+    ...job,
+    _id: job._id.toString(),
+  }));
+
+  return { job: { ...job, _id: job._id.toString() }, similarJobs: formattedSimilarJobs };
 }
 
 export default function JobDetails() {
   const { job, similarJobs } = useLoaderData<typeof loader>();
-
+  const navigate = useNavigate()
   return (
     <div className="max-w-4xl mx-auto p-6">
       <p className="font-bold text-2xl">Details page for {job.title}</p>
@@ -43,8 +48,8 @@ export default function JobDetails() {
         <h2 className="text-xl font-bold">Similar Jobs</h2>
         <div className="flex gap-4 overflow-x-auto mt-4 p-2">
           {similarJobs.length > 0 ? (
-            similarJobs.map((similarJob) => (
-              <Card key={similarJob._id} className="w-64 min-w-[250px] shadow-md">
+            similarJobs.map((similarJob, i) => (
+              <Card  key={i} className="w-64 min-w-[250px] shadow-md">
                 <CardHeader>
                   <CardTitle className="text-lg">{similarJob.title}</CardTitle>
                   <Badge>{similarJob.category}</Badge>
@@ -52,7 +57,7 @@ export default function JobDetails() {
                 <CardContent>
                   <p className="text-sm text-gray-500">{similarJob.company}</p>
                   <p className="text-sm">{similarJob.location}</p>
-                  <Button variant="outline" className="mt-2 w-full">
+                  <Button variant="outline" className="mt-2 w-full" onClick={()=>navigate(`/job/${similarJob._id}`) }>
                     View Details
                   </Button>
                 </CardContent>
