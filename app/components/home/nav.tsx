@@ -13,7 +13,7 @@ export default function Navbar() {
           JobBoard Pro
         </Link>
         <div className="hidden md:flex gap-6">
-          <Link to="/jobs" className="text-gray-700 hover:text-blue-600">
+          <Link to="/all-jobs" className="text-gray-700 hover:text-blue-600">
             Jobs
           </Link>
           <Link to="/companies" className="text-gray-700 hover:text-blue-600">
@@ -24,7 +24,7 @@ export default function Navbar() {
           </Link>
         </div>
         <div className="hidden md:flex gap-4">
-          <Button variant="outline">Login</Button>
+          <Button variant="outline"><Link to='/sign-in'>Login</Link></Button>
           <Button>Sign Up</Button>
         </div>
         <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
@@ -43,7 +43,7 @@ export default function Navbar() {
             About
           </Link>
           <Button variant="outline">Login</Button>
-          <Button>Sign Up</Button>
+          <Button><Link to='/sign-up'></Link>Sign Up</Button>
         </div>
       )}
     </nav>

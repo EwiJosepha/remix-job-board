@@ -13,7 +13,9 @@ export async function loader({ params }: LoaderFunctionArgs) {
 
   if (!job) throw new Response("Job Not Found", { status: 404 });
 
-  const similarJobs = await JobModel.find({ category: job.category }).limit(4).lean();
+  const similarJobs = await JobModel.find({ category: job.category }).lean();
+  console.log({similarJobs});
+  
 
   const formattedSimilarJobs = similarJobs.map((job) => ({
     ...job,
@@ -27,8 +29,9 @@ export default function JobDetails() {
   const { job, similarJobs } = useLoaderData<typeof loader>();
   const navigate = useNavigate()
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <p className="font-bold text-2xl">Details page for {job.title}</p>
+    <div >
+      <div className="max-w-4xl mx-auto p-6">
+      <p className="font-bold text-2xl my-5">Details about {job.title}</p>
       <Card className="shadow-lg p-6">
         <CardHeader>
           <CardTitle className="text-2xl font-bold">{job.title}</CardTitle>
@@ -43,8 +46,9 @@ export default function JobDetails() {
           <Button className="mt-4 w-full">Apply Now</Button>
         </CardContent>
       </Card>
+      </div>
 
-      <div className="mt-10">
+      <div className="my-10 max-w-7xl mx-auto">
         <h2 className="text-xl font-bold">Similar Jobs</h2>
         <div className="flex gap-4 overflow-x-auto mt-4 p-2">
           {similarJobs.length > 0 ? (
