@@ -1,4 +1,4 @@
-import { useLoaderData, useNavigate } from "@remix-run/react";
+import { Link, useLoaderData, useNavigate } from "@remix-run/react";
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { connectDB } from "~/db/connect";
 import { JobModel } from "~/db/models/job";
@@ -43,7 +43,7 @@ export default function JobDetails() {
           <p className="text-lg font-semibold">Company: {job.company}</p>
           <p className="text-gray-500">Location: {job.location}</p>
           <p className="text-gray-500">Salary: {job.salary || "Not specified"}</p>
-          <Button className="mt-4 w-full">Apply Now</Button>
+          <Button className="mt-4 w-full"><Link to={`/apply/${job._id}`}>Apply Now</Link></Button>
         </CardContent>
       </Card>
       </div>
