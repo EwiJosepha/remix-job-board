@@ -23,10 +23,9 @@ export const loader: LoaderFunction = async () => {
 function AllJobs() {
   const jobs = useLoaderData<Job[]>()  || [];
   return (
-    <>
-      <h1>ALL JOB LSTINGS</h1>
+    <div className='pt-20'>
       <JobContainer jobs={jobs} />
-    </>
+    </div>
   )
 }
 
