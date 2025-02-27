@@ -5,20 +5,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { ActionFunction } from '@remix-run/node';
 import { login } from '~/services/auth.service';
+import User from '~/db/models/user';
 
 export const action: ActionFunction = async ({ request }) => {
   const values = await request.formData()
   const formObj = Object.fromEntries(values)
-  const formData  = {
+  const formData = {
     email: formObj['email'] as string,
     password: formObj['password'] as string
   }
 
-  console.log({formData});
-  
-  const response = await login({email: formData.email, password: formData.password})
-  if(response.status === 400) return response
-  return redirect ('/dashboard')
+  const response = await login({ email: formData.email, password: formData.password })
+  if (response.status === 400) return response
+  await User.findOne({ email: formData.email });
+  return redirect('/dashboard')
 }
 
 
@@ -30,7 +30,7 @@ function SignInPage() {
           <CardTitle className="text-center text-xl">Sign In</CardTitle>
         </CardHeader>
         <CardContent>
-          <Form method="post"  className="space-y-4">
+          <Form method="post" className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email
