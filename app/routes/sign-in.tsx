@@ -1,11 +1,10 @@
 import React from 'react'
-import { Form, Link, redirect } from "@remix-run/react";
+import { Form, Link, redirect, useActionData, useSubmit } from "@remix-run/react";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
-import { ActionFunction } from '@remix-run/node';
+import { ActionFunction, json } from '@remix-run/node';
 import { login } from '~/services/auth.service';
-import User from '~/db/models/user';
 import signInFormSchema from '~/schemas/sign-in.schema';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -15,22 +14,26 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "~/comp
 export const action: ActionFunction = async ({ request }) => {
   const values = await request.formData()
   const formObj = Object.fromEntries(values)
-  const formData = {
-    email: formObj['email'] as string,
-    password: formObj['password'] as string
-  }
 
-  const response = await login({ email: formData.email, password: formData.password })
-  if (response.status === 400) return response
-  console.log({response});
-  
-  await User.findOne({ email: formData.email });
-  return redirect('/dashboard')
+  try {
+    const validatedData = signInFormSchema.parse(formObj)
+    const response = await login({ email: validatedData.email, password: validatedData.password })
+    if (response.status === 400) {
+      return json({ errors: response }, { status: 400 });
+    }
+    return redirect('/dashboard');
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return json({ errors: error.flatten().fieldErrors }, { status: 400 });
+    }
+    return json({ errors: { _form: "An unexpected error occurred" } }, { status: 500 });
+  }
 }
 
 
 function SignInPage() {
-
+  const actionData = useActionData<typeof action>();
+  const submit = useSubmit()
   const form = useForm<z.infer<typeof signInFormSchema>>({
     resolver: zodResolver(signInFormSchema),
     defaultValues: {
@@ -40,9 +43,16 @@ function SignInPage() {
   })
 
   function onSubmit(values: z.infer<typeof signInFormSchema>) {
-    console.log(values);
-
+    submit(values, { method: 'post' })
   }
+
+  React.useEffect(() => {
+    if (actionData?.errors) {
+      Object.entries(actionData.errors).forEach(([key, value]) => {
+        form.setError(key as any, { type: "manual", message: value as string });
+      });
+    }
+  }, [actionData, form]);
 
 
   return (
@@ -53,7 +63,7 @@ function SignInPage() {
         </CardHeader>
         <CardContent>
           <FormProvider {...form}>
-            <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+            <Form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
               <FormField
                 control={form.control}
                 name="email"
@@ -63,7 +73,7 @@ function SignInPage() {
                     <FormControl>
                       <Input type="email" placeholder="you@example.com" {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage>{form.formState.errors.email?.message}</FormMessage>
                   </FormItem>
                 )}
               />
@@ -77,7 +87,7 @@ function SignInPage() {
                     <FormControl>
                       <Input type="password" placeholder="********" {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage>{form.formState.errors.password?.message}</FormMessage>
                   </FormItem>
                 )}
               />
@@ -85,7 +95,7 @@ function SignInPage() {
               <Button type="submit" className="w-full">
                 Sign In
               </Button>
-            </form>
+            </Form>
           </FormProvider>
 
           <div className="mt-4 text-center text-sm text-gray-600">
