@@ -7,7 +7,7 @@ import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { FormProvider, useForm } from 'react-hook-form';
 import { applySchema } from '~/schemas/apply.schemas';
-import { FormControl, FormField, FormItem, FormLabel } from '~/components/ui/form';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
 import Apply from '~/db/models/apply';
 import { z } from 'zod';
 import React from 'react';
@@ -87,6 +87,7 @@ function ApplyToJob() {
                   <FormControl>
                     <input type='text' placeholder='Title' {...field} value={job.title} disabled />
                   </FormControl>
+                  <FormMessage>{form.formState.errors.title?.message}</FormMessage>
                 </FormItem>
               )}>
 
@@ -97,6 +98,7 @@ function ApplyToJob() {
                   <FormControl>
                     <input type='text' placeholder='company' {...field} value={job.company} disabled />
                   </FormControl>
+                  <FormMessage>{form.formState.errors.company?.message}</FormMessage>
                 </FormItem>
               )}>
               </FormField>
@@ -107,6 +109,7 @@ function ApplyToJob() {
                   <FormControl>
                     <input type='text' placeholder='first name' {...field} />
                   </FormControl>
+                   <FormMessage>{form.formState.errors.firstName?.message}</FormMessage>   
                 </FormItem>
               )}>
               </FormField>
@@ -116,6 +119,7 @@ function ApplyToJob() {
                   <FormControl>
                     <input type='email' placeholder='email' {...field} />
                   </FormControl>
+                  <FormMessage>{form.formState.errors.email?.message}</FormMessage>            
                 </FormItem>
               )}>
               </FormField>
@@ -125,6 +129,7 @@ function ApplyToJob() {
                   <FormControl>
                     <input type='file' placeholder='resume' {...field} />
                   </FormControl>
+                  <FormMessage>{form.formState.errors.resume?.message}</FormMessage>             
                 </FormItem>
               )}>
               </FormField>
