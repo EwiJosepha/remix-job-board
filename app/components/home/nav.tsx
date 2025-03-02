@@ -1,5 +1,4 @@
 import { Link } from "@remix-run/react";
-import { Menu } from "lucide-react";
 import { useState } from "react";
 import { Button } from "../ui/button";
 
@@ -25,7 +24,7 @@ export default function Navbar() {
         </div>
         <div className="hidden md:flex gap-4">
           <Button variant="outline"><Link to='/sign-in'>Login</Link></Button>
-          <Button>Sign Up</Button>
+          <Button><Link to='/sign-in'>Sign Up</Link></Button>
         </div>
         <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
         <i className="ri-menu-line text-3xl"></i>
