@@ -1,11 +1,41 @@
-import React from 'react'
+import { json, Outlet, useActionData } from "@remix-run/react";
+import { SidebarProvider, SidebarTrigger } from "~/components/ui/sidebar";
+import { AppSidebar } from "~/components/app-sidebar";
+import { ActionFunction } from "@remix-run/node";
 
-function Dashboard() {
+export const action: ActionFunction = async ({ request }) => {
+  const cookieHeader = request.headers.get("Cookie");
+  const cookieStore = new Map();
+
+  if (cookieHeader) {
+    const parsedCookies = cookieHeader.split("; ").map(cookie => cookie.split("="));
+    parsedCookies.forEach(([key, value]) => cookieStore.set(key, value));
+  }
+
+  const defaultOpen = cookieStore.get("sidebar_state") === "true";
+
+  return json({ defaultOpen });
+};
+
+export default function DashboardLayout() {
+    const actionData = useActionData<{ defaultOpen: boolean }>();
+    const defaultOpen = actionData?.defaultOpen ?? false;
   return (
-    <div>
-      <p>Dashboard</p>
-    </div>
-  )
+    <SidebarProvider
+      style={{
+        "--sidebar-width": "20rem",
+        "--sidebar-width-mobile": "20rem",
+      } as React.CSSProperties}
+      defaultOpen={true} 
+    >
+      <div className="flex">
+        <AppSidebar />
+        <main className="flex-1 p-4">
+          <SidebarTrigger />
+          {/* <Outlet /> */}
+          <h1 className="py-20">Hello world</h1>
+        </main>
+      </div>
+    </SidebarProvider>
+  );
 }
-
-export default Dashboard

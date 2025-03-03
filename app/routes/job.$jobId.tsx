@@ -49,7 +49,7 @@ export default function JobDetails() {
       </div>
 
       <div className="my-10 max-w-7xl mx-auto">
-        <h2 className="text-xl font-bold">Similar Jobs</h2>
+        <h2 className="text-xl font-bold px-2">Similar Jobs</h2>
         <div className="flex gap-4 overflow-x-auto mt-4 p-2">
           {similarJobs.length > 0 ? (
             similarJobs.map((similarJob, i) => (
