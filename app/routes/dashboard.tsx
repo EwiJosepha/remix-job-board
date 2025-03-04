@@ -32,8 +32,7 @@ export default function DashboardLayout() {
         <AppSidebar />
         <main className="flex-1 p-4">
           <SidebarTrigger />
-          {/* <Outlet /> */}
-          <h1 className="py-20">Hello world</h1>
+          <Outlet />
         </main>
       </div>
     </SidebarProvider>
