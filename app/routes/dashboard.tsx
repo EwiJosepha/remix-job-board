@@ -18,15 +18,15 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function DashboardLayout() {
-    const actionData = useActionData<{ defaultOpen: boolean }>();
-    const defaultOpen = actionData?.defaultOpen ?? false;
+  const actionData = useActionData<{ defaultOpen: boolean }>();
+  actionData?.defaultOpen ?? false;
   return (
     <SidebarProvider
       style={{
         "--sidebar-width": "20rem",
         "--sidebar-width-mobile": "20rem",
       } as React.CSSProperties}
-      defaultOpen={true} 
+      defaultOpen={true}
     >
       <div className="flex">
         <AppSidebar />

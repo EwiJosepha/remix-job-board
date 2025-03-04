@@ -14,8 +14,8 @@ export async function loader({ params }: LoaderFunctionArgs) {
   if (!job) throw new Response("Job Not Found", { status: 404 });
 
   const similarJobs = await JobModel.find({ category: job.category }).lean();
-  console.log({similarJobs});
-  
+  console.log({ similarJobs });
+
 
   const formattedSimilarJobs = similarJobs.map((job) => ({
     ...job,
@@ -29,23 +29,26 @@ export default function JobDetails() {
   const { job, similarJobs } = useLoaderData<typeof loader>();
   const navigate = useNavigate()
   return (
-    <div >
+    <div>
+      <div className="max-w-7xl mx-auto">
+        <p className="font-bold text-2xl mt-28 mb-5 px-2">Details about {job.title}</p>
+      </div>
+
       <div className="max-w-4xl mx-auto p-6">
-      <p className="font-bold text-2xl my-5">Details about {job.title}</p>
-      <Card className="shadow-lg p-6">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold">{job.title}</CardTitle>
-          <Badge className="text-sm">{job.category}</Badge>
-        </CardHeader>
-        <CardContent>
-          <p className="text-gray-600">{job.description}</p>
-          <Separator className="my-4" />
-          <p className="text-lg font-semibold">Company: {job.company}</p>
-          <p className="text-gray-500">Location: {job.location}</p>
-          <p className="text-gray-500">Salary: {job.salary || "Not specified"}</p>
-          <Button className="mt-4 w-full"><Link to={`/apply/${job._id}`}>Apply Now</Link></Button>
-        </CardContent>
-      </Card>
+        <Card className="shadow-lg p-6">
+          <CardHeader>
+            <CardTitle className="text-2xl font-bold">{job.title}</CardTitle>
+            <Badge className="text-sm">{job.category}</Badge>
+          </CardHeader>
+          <CardContent className="px-1">
+            <p className="text-gray-600">{job.description}</p>
+            <Separator className="my-4" />
+            <p className="text-lg font-semibold">Company: {job.company}</p>
+            <p className="text-gray-500">Location: {job.location}</p>
+            <p className="text-gray-500">Salary: {job.salary || "Not specified"}</p>
+            <Button className="mt-4 w-full"><Link to={`/apply/${job._id}`}>Apply Now</Link></Button>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="my-10 max-w-7xl mx-auto">
@@ -53,7 +56,7 @@ export default function JobDetails() {
         <div className="flex gap-4 overflow-x-auto mt-4 p-2">
           {similarJobs.length > 0 ? (
             similarJobs.map((similarJob, i) => (
-              <Card  key={i} className="w-64 min-w-[250px] shadow-md">
+              <Card key={i} className="w-64 min-w-[250px] shadow-md cursor-pointer">
                 <CardHeader>
                   <CardTitle className="text-lg">{similarJob.title}</CardTitle>
                   <Badge>{similarJob.category}</Badge>
@@ -61,7 +64,7 @@ export default function JobDetails() {
                 <CardContent>
                   <p className="text-sm text-gray-500">{similarJob.company}</p>
                   <p className="text-sm">{similarJob.location}</p>
-                  <Button variant="outline" className="mt-2 w-full" onClick={()=>navigate(`/job/${similarJob._id}`) }>
+                  <Button variant="outline" className="mt-2 w-full" onClick={() => navigate(`/job/${similarJob._id}`)}>
                     View Details
                   </Button>
                 </CardContent>
