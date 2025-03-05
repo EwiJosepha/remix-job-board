@@ -3,13 +3,21 @@ import { Form, Link, redirect, useActionData, useSubmit } from "@remix-run/react
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
-import { ActionFunction, json } from '@remix-run/node';
+import { ActionFunction, createCookie, json } from '@remix-run/node';
 import { login } from '~/services/auth.service';
 import signInFormSchema from '~/schemas/sign-in.schema';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form";
+
+const tokenCookie = createCookie("token", {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax",
+  path: "/",
+  maxAge: 60 * 60 * 24 * 5,
+});
 
 export const action: ActionFunction = async ({ request }) => {
   const values = await request.formData()
@@ -21,7 +29,16 @@ export const action: ActionFunction = async ({ request }) => {
     if (response.status === 400) {
       return json({ errors: response }, { status: 400 });
     }
-    return redirect('/dashboard');
+    const token = await response.json();
+    if (!token) {
+      return json({ error: "Token not received" }, { status: 500 });
+    }
+    console.log({ token });
+    return redirect("/dashboard", {
+      headers: {
+        "Set-Cookie": await tokenCookie.serialize(token),
+      },
+    });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return json({ errors: error.flatten().fieldErrors }, { status: 400 });
@@ -33,6 +50,9 @@ export const action: ActionFunction = async ({ request }) => {
 
 function SignInPage() {
   const actionData = useActionData<typeof action>();
+
+  console.log({ actionData });
+
   const submit = useSubmit()
   const form = useForm<z.infer<typeof signInFormSchema>>({
     resolver: zodResolver(signInFormSchema),

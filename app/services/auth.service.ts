@@ -1,13 +1,10 @@
-import { json } from "@remix-run/node";
+import {json } from "@remix-run/node";
 import { connectDB } from "~/db/connect";
 import User from "~/db/models/user";
 import bcrypt from 'bcryptjs'
 import { jwtSecret, expiringTime } from "app/utils/constants"
 import jwt from 'jsonwebtoken';
-
-console.log({expiringTime});
-
-
+import * as cookie from "cookie";
 
 interface FormData {
   name: string
@@ -55,4 +52,37 @@ export const login = async ({ email, password }: Pick<FormData, "email" | "passw
   return json({ message: 'Login successful', token, email: existingUser.email }, { status: 200 });
 };
 
+export async function getCurrentUser(request: Request) {
+  await connectDB();
 
+  try {
+    const cookieHeader = request.headers.get("Cookie");
+    const cookies = cookieHeader ? await cookie.parse(cookieHeader) : {};
+    const token = cookies.token
+
+    console.log({token});
+    
+    if (!cookieHeader || !cookieHeader.startsWith("Bearer ")) {
+      throw json({ error: "Unauthorized, token missing" }, { status: 401 });
+    }
+    const decoded: any = jwt.verify(token, jwtSecret);
+
+    if (!decoded || !decoded.userId) {
+      throw json({ error: "Invalid or expired token" }, { status: 401 });
+    }
+
+    const user = await User.findById(decoded.userId).select("-password");
+
+    console.log({user});
+    
+
+    if (!user) {
+      throw json({ error: "User not found" }, { status: 404 });
+    }
+
+    return user;
+  } catch (error) {
+    console.error("Error retrieving user:", error);
+    throw json({ error: "Internal server error" }, { status: 500 });
+  }
+}
