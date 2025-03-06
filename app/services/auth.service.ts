@@ -1,15 +1,20 @@
-import {json } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { connectDB } from "~/db/connect";
 import User from "~/db/models/user";
 import bcrypt from 'bcryptjs'
-import { jwtSecret, expiringTime } from "app/utils/constants"
-import jwt from 'jsonwebtoken';
+import { jwtSecret} from "app/utils/constants"
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import * as cookie from "cookie";
 
 interface FormData {
   name: string
   email: string
   password: string
+}
+
+interface CustomJwtPayload extends JwtPayload {
+  userId: string;
+  email: string;
 }
 
 export async function registerUser({ formData }: { formData: FormData }) {
@@ -26,63 +31,66 @@ export async function registerUser({ formData }: { formData: FormData }) {
     password: hashedPassword,
   });
 
-  console.log("User Created:", newUser);
-
   return json({ message: "User created successfully" }, { status: 201 });
 }
-
-
 
 export const login = async ({ email, password }: Pick<FormData, "email" | "password">) => {
   await connectDB();
 
   if (!email || !password) return json({ error: 'Bad request, missing email or password' }, { status: 400 });
 
-  const existingUser = await User.findOne({email: email});
+  const existingUser = await User.findOne({ email: email });
   if (!existingUser) return json({ error: 'User not found' }, { status: 404 });
 
   const isPasswordValid = await bcrypt.compare(password, existingUser.password);
   if (!isPasswordValid) return json({ error: 'Invalid password' }, { status: 401 });
   const token = jwt.sign(
     { userId: existingUser._id, email: existingUser.email },
-    jwtSecret, 
+    jwtSecret,
     { expiresIn: '5d' }
   );
-
-  return json({ message: 'Login successful', token, email: existingUser.email }, { status: 200 });
+  return json({ token }, { status: 200 });
 };
 
 export async function getCurrentUser(request: Request) {
   await connectDB();
-
   try {
     const cookieHeader = request.headers.get("Cookie");
-    const cookies = cookieHeader ? await cookie.parse(cookieHeader) : {};
-    const token = cookies.token
+    if (!cookieHeader) {
+      throw json({ error: "Unauthorized, no cookies found" }, { status: 401 });
+    }
 
-    console.log({token});
-    
-    if (!cookieHeader || !cookieHeader.startsWith("Bearer ")) {
+    const cookies = cookie.parse(cookieHeader);
+    let token = cookies.token;
+
+    if (!token) {
       throw json({ error: "Unauthorized, token missing" }, { status: 401 });
     }
-    const decoded: any = jwt.verify(token, jwtSecret);
 
-    if (!decoded || !decoded.userId) {
+    const decodedToken = Buffer.from(token, "base64").toString("utf-8");
+    const cleanedToken = decodedToken.replace(/"/g, '').trim();
+
+    let decoded: CustomJwtPayload | string;
+    try {
+      decoded = jwt.verify(cleanedToken, jwtSecret) as CustomJwtPayload;
+
+    } catch (error: any) {
       throw json({ error: "Invalid or expired token" }, { status: 401 });
     }
 
-    const user = await User.findById(decoded.userId).select("-password");
 
-    console.log({user});
-    
+    if (!decoded || !decoded.userId) {
+      throw json({ error: "Invalid token payload" }, { status: 401 });
+    }
+    const user = await User.findById(decoded.userId).select("-password");
 
     if (!user) {
       throw json({ error: "User not found" }, { status: 404 });
     }
-
     return user;
   } catch (error) {
     console.error("Error retrieving user:", error);
     throw json({ error: "Internal server error" }, { status: 500 });
   }
 }
+

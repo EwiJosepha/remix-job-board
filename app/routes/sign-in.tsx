@@ -29,16 +29,26 @@ export const action: ActionFunction = async ({ request }) => {
     if (response.status === 400) {
       return json({ errors: response }, { status: 400 });
     }
-    const token = await response.json();
+
+    const jsonResponse = await response.json();
+
+    if (!("token" in jsonResponse)) {
+      return json({ error: "Token not received" }, { status: 500 });
+    }
+
+    const token = jsonResponse.token;
     if (!token) {
       return json({ error: "Token not received" }, { status: 500 });
     }
-    console.log({ token });
+
+    const serializedToken = await tokenCookie.serialize(token);
     return redirect("/dashboard", {
       headers: {
         "Set-Cookie": await tokenCookie.serialize(token),
       },
+
     });
+
   } catch (error) {
     if (error instanceof z.ZodError) {
       return json({ errors: error.flatten().fieldErrors }, { status: 400 });
@@ -50,9 +60,6 @@ export const action: ActionFunction = async ({ request }) => {
 
 function SignInPage() {
   const actionData = useActionData<typeof action>();
-
-  console.log({ actionData });
-
   const submit = useSubmit()
   const form = useForm<z.infer<typeof signInFormSchema>>({
     resolver: zodResolver(signInFormSchema),
