@@ -34,7 +34,6 @@ export const action = async ({ request }: { request: Request }) => {
   try {
     const validatedValues = applySchema.parse(values)
     const saveToDb = Apply.create(validatedValues)
-    console.log({ validatedValues });
     if (!saveToDb) {
       return json({ message: 'Application failed', status: 400 });
     }

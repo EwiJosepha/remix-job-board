@@ -20,10 +20,10 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function Activities() {
-  const { appliedJobs } = useLoaderData<typeof loader>();
+  const  appliedJobs = useLoaderData<typeof loader>();
 
   return (
-    <p>hello</p>
+    <p>hello{appliedJobs.name}</p>
     // <div className="py-10 px-6">
     //   <h2 className="text-2xl font-bold mb-6">Your Job Applications</h2>
 
