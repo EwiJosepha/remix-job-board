@@ -14,8 +14,6 @@ export async function loader({ params }: LoaderFunctionArgs) {
   if (!job) throw new Response("Job Not Found", { status: 404 });
 
   const similarJobs = await JobModel.find({ category: job.category }).lean();
-  console.log({ similarJobs });
-
 
   const formattedSimilarJobs = similarJobs.map((job) => ({
     ...job,
