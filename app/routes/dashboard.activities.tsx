@@ -11,12 +11,9 @@ export const loader: LoaderFunction = async ({ request }) => {
   await connectDB()
   try {
     const user = await getCurrentUser(request);
-    console.log({ user });
-
-    const appliedJobs = await Apply.find()
-    console.log({appliedJobs});
-    
-
+    const appliedJobs = await Apply.find({
+      user: user._id
+    }).select("title company status");
     return json(appliedJobs);
   } catch (error) {
     return error;

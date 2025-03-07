@@ -50,9 +50,7 @@ export const action = async ({ request }: { request: Request }) => {
 };
 
 function ApplyToJob() {
-  const { user, job } = useLoaderData<typeof loader>()
-  console.log("userddd", user);
-  
+  const { user, job } = useLoaderData<typeof loader>()  
   const submit = useSubmit()
   const actionData = useActionData<typeof action>()
 
