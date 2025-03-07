@@ -1,5 +1,6 @@
 import z from 'zod'
 export const applySchema = z.object({
+  user: z.string(),
   title: z.string(),
   company: z.string(),
   email: z.string().email({message: 'invalid email address'}),

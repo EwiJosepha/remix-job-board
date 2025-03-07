@@ -13,17 +13,19 @@ import { z } from 'zod';
 import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '~/components/ui/input';
+import { getCurrentUser } from '~/services/auth.service';
 
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ params, request }) => {
   await connectDB();
   const job = await JobModel.findById(params.jobId).lean();
+  const user = await getCurrentUser(request);
 
   if (!job) {
     throw new Response("Job Not Found", { status: 404 });
   }
 
-  return json(job);
+  return json({ job, user });
 };
 
 export const action = async ({ request }: { request: Request }) => {
@@ -48,18 +50,20 @@ export const action = async ({ request }: { request: Request }) => {
 };
 
 function ApplyToJob() {
-
+  const { user, job } = useLoaderData<typeof loader>()
+  console.log("userddd", user);
+  
   const submit = useSubmit()
   const actionData = useActionData<typeof action>()
-  const job = useLoaderData<Job>();
 
   const form = useForm<z.infer<typeof applySchema>>({
     resolver: zodResolver(applySchema),
     defaultValues: {
+      user: user._id,
       title: job.title,
       company: job.company,
-      firstName: '',
-      email: '',
+      firstName: user.name,
+      email: user.email,
       resume: ''
     }
   })
@@ -143,6 +147,7 @@ function ApplyToJob() {
                         placeholder="Enter your first name"
                         className="input-field"
                         {...field}
+                        value={user.name}
                       />
                     </FormControl>
                     <FormMessage className="text-red-500 text-sm">
@@ -163,6 +168,7 @@ function ApplyToJob() {
                         placeholder="Enter your email"
                         className="input-field"
                         {...field}
+                        value={user.email}
                       />
                     </FormControl>
                     <FormMessage className="text-red-500 text-sm">
