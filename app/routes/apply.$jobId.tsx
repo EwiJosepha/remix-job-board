@@ -1,7 +1,7 @@
 import { LoaderFunction } from '@remix-run/node'
 import { Form, useActionData, useLoaderData, useSubmit } from '@remix-run/react';
 import { connectDB } from '~/db/connect';
-import { Job, JobModel } from '~/db/models/job';
+import { JobModel } from '~/db/models/job';
 import { json, redirect } from "@remix-run/node";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
@@ -62,6 +62,8 @@ function ApplyToJob() {
       company: job.company,
       firstName: user.name,
       email: user.email,
+      location: job.location,
+      status: job.status,
       resume: ''
     }
   })
