@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { connectDB } from "~/db/connect";
 import { getCurrentUser } from "~/services/auth.service";
 import Apply from "~/db/models/apply";
-// import { BriefcaseIcon } from "@heroicons/react/outline";
 
 export const loader: LoaderFunction = async ({ request }) => {
   await connectDB();
@@ -14,7 +13,8 @@ export const loader: LoaderFunction = async ({ request }) => {
     const user = await getCurrentUser(request);
     const appliedJobs = await Apply.find({
       user: user._id,
-    }).select("title company status");
+    });
+    
     return json(appliedJobs);
   } catch (error) {
     return error;
@@ -25,7 +25,7 @@ export default function Activities() {
   const appliedJobs = useLoaderData<typeof loader>();
 
   return (
-    <div className="py-10 px-6">
+    <div className="py-10 px-6 bg-gray-200 rounded-lg">
       <div className="flex items-center gap-3 mb-8">
         <i className="ri-briefcase-line w-8 h-8 text-blue-600"></i>
         <h2 className="text-3xl font-bold text-gray-800">Your Job Applications</h2>
@@ -35,7 +35,7 @@ export default function Activities() {
           <CardTitle className="text-2xl font-semibold">Applied Jobs</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-lg font-medium">{appliedJobs.length} Applications Submitted</p>
+          <p className="text-lg font-medium"><span className="text-white">{appliedJobs.length}</span> Applications Submitted</p>
         </CardContent>
       </Card>
 

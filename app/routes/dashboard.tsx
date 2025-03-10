@@ -2,6 +2,7 @@ import { json, Outlet, useActionData } from "@remix-run/react";
 import { SidebarProvider, SidebarTrigger } from "~/components/ui/sidebar";
 import { AppSidebar } from "~/components/app-sidebar";
 import { ActionFunction } from "@remix-run/node";
+import DashboardHeader from "~/components/dashboard-header";
 
 export const action: ActionFunction = async ({ request }) => {
   const cookieHeader = request.headers.get("Cookie");
@@ -28,9 +29,10 @@ export default function DashboardLayout() {
       } as React.CSSProperties}
       defaultOpen={true}
     >
-      <div className="flex">
+      <div className="flex w-full ">
         <AppSidebar />
         <main className="flex-1 p-4">
+          <DashboardHeader/>
           <SidebarTrigger />
           <Outlet />
         </main>
