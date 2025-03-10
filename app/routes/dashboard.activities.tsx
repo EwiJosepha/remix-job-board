@@ -25,7 +25,7 @@ export default function Activities() {
   const appliedJobs = useLoaderData<typeof loader>();
 
   return (
-    <div className="py-10 px-6 bg-gray-200">
+    <div className="py-10 px-6 bg-gray-200 rounded-lg">
       <div className="flex items-center gap-3 mb-8">
         <i className="ri-briefcase-line w-8 h-8 text-blue-600"></i>
         <h2 className="text-3xl font-bold text-gray-800">Your Job Applications</h2>

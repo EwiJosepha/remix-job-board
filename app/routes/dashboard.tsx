@@ -29,7 +29,7 @@ export default function DashboardLayout() {
       } as React.CSSProperties}
       defaultOpen={true}
     >
-      <div className="flex w-full bg-gray-100 border-r-8">
+      <div className="flex w-full ">
         <AppSidebar />
         <main className="flex-1 p-4">
           <DashboardHeader/>

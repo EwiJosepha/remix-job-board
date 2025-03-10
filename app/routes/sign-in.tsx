@@ -41,8 +41,8 @@ export const action: ActionFunction = async ({ request }) => {
       return json({ error: "Token not received" }, { status: 500 });
     }
 
-    const serializedToken = await tokenCookie.serialize(token);
-    return redirect("/dashboard", {
+    await tokenCookie.serialize(token);
+    return redirect("/dashboard/activities", {
       headers: {
         "Set-Cookie": await tokenCookie.serialize(token),
       },
